@@ -1,0 +1,7 @@
+; https://flake8.pycqa.org/en/latest/user/configuration.html#
+[flake8]
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist
+max-complexity = 10
+max-doc-length = 80
+max-line-length = 120
+indent-size = 4
