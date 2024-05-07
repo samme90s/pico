@@ -6,7 +6,7 @@ from ubinascii import hexlify
 
 from config import (ADA_SECRET, ADA_TOPIC, ADA_USER, HOST, PORT, SSID,
                     SSID_SECRET)
-from extensions.umqttsimple import MQTTClient, MQTTException
+from umqttsimple import MQTTClient, MQTTException
 
 
 class WLANController:
@@ -114,10 +114,10 @@ def main():
     sensor = DHTController(pin=28)
 
     while True:
-        msg = f"{sensor.measure().get_temperature()}".encode()
-        client.publish(topic=ADA_TOPIC.encode(), msg=msg)
-        utime.sleep(5)
+        client.publish(
+            topic=ADA_TOPIC.encode(),
+            msg=f"{sensor.measure().get_temperature()}".encode())
+        utime.sleep(10)
 
 
-if __name__ == "__main__":
-    main()
+main()
