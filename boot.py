@@ -1,11 +1,11 @@
 import machine
+import ujson
 import utime
 from dht import DHT11
 from network import STA_IF, WLAN
 from ubinascii import hexlify
 
-from config import (ADA_SECRET, ADA_TOPIC, ADA_USER, HOST, PORT, SSID,
-                    SSID_SECRET)
+from config import ADA_SECRET, ADA_USER, HOST, PORT, SSID, SSID_SECRET
 from umqttsimple import MQTTClient, MQTTException
 
 
@@ -114,9 +114,15 @@ def main():
     sensor = DHTController(pin=28)
 
     while True:
+        sensor.measure()
+        data = ujson.dumps({
+            "temperature": sensor.get_temperature(),
+            "humidity": sensor.get_humidity()
+        })
+
         client.publish(
-            topic=ADA_TOPIC.encode(),
-            msg=f"{sensor.measure().get_temperature()}".encode())
+            topic=f"{ADA_USER}/f/picow".encode(),
+            msg=data.encode())
         utime.sleep(10)
 
 
