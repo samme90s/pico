@@ -6,11 +6,33 @@ from network import STA_IF, WLAN
 from ubinascii import hexlify
 
 from config import ADA_SECRET, ADA_USER, HOST, PORT, SSID, SSID_SECRET
-from umqttsimple import MQTTClient, MQTTException
+from umqttsimple import MQTTClient
 
 
-class WLANController:
-    def __init__(self, ssid: str, ssid_secret: str, name="WLAN"):
+class Controller:
+    def __init__(self, name="Controller"):
+        self.name = name
+
+    def __print(self, msg: str):
+        print(f"{self.name} :: {msg}")
+
+    def __handle_exc(self, exc: Exception, timeout=1):
+        if timeout < 1:
+            raise ValueError("Timeout must be greater than 1")
+
+        print(f"{self.name} :: {str(exc.__class__.__name__)}<{str(exc)}>")
+        utime.sleep(timeout)
+
+        self.__print("MACHINE<Resetting>")
+        utime.sleep(timeout)
+
+        machine.reset()
+
+
+class WLANController(Controller):
+    def __init__(self, ssid: str, ssid_secret: str, timeout=30, name="WLAN"):
+        super().__init__(name=name)
+
         if ssid is None or ssid_secret is None:
             raise ValueError("Service set -identifier (network name) or -secret (password) is incorrect")
 
@@ -20,32 +42,31 @@ class WLANController:
         self.sta_if = WLAN(STA_IF)
         self.ssid = ssid
         self.ssid_secret = ssid_secret
-        self.name = name
+        self.timeout = timeout
         self.__connect()
 
     def __connect(self):
-        if not self.sta_if.isconnected():
-            print(f"{self.name} :: Connecting to router...")
-            self.sta_if.active(True)
-            self.sta_if.connect(self.ssid, self.ssid_secret)
+        try:
+            if not self.sta_if.isconnected():
+                self.__print("Connecting")
+                self.sta_if.active(True)
+                self.sta_if.connect(self.ssid, self.ssid_secret)
 
-            while not self.sta_if.isconnected():
-                print(f"{self.name} :: Waiting for connection...")
-                utime.sleep(5)
+                elapsed = 0
+                while not self.sta_if.isconnected():
+                    utime.sleep(1)
+                    if (elapsed := elapsed + 1) > self.timeout:
+                        raise Exception("Timed out")
 
-        print(f"{self.name} :: Connected :: Config<{self.sta_if.ifconfig()}>")
-
-    def disconnect(self):
-        if self.sta_if.isconnected():
-            print(f"{self.name} :: Disconnecting from router...")
-            self.sta_if.disconnect()
-            print(f"{self.name} :: Disconnected")
-        else:
-            print(f"{self.name} :: No active connection to disconnect")
+                self.__print(f"Connected<{self.sta_if.ifconfig()}>")
+        except Exception as e:
+            self.__handle_exc(e)
 
 
-class MQTTController:
+class MQTTController(Controller):
     def __init__(self, client_id: bytes, host: str, port: int, user: str, secret: str, name="MQTT"):
+        super().__init__(name=name)
+
         self.client = MQTTClient(
             client_id,
             host,
@@ -54,48 +75,43 @@ class MQTTController:
             secret,
             keepalive=60)
         self.info = f"{client_id.decode()}@{host}:{port}"
-        self.name = name
+
         self.__connect()
 
     def __connect(self):
         try:
-            print(f"{self.name} :: Connecting :: {self.info}")
+            self.__print(f"Connecting<{self.info}>")
             self.client.connect()
-            print(f"{self.name} :: Connection established")
+            self.__print("Connected")
         except Exception as e:
-            if isinstance(e, MQTTException):
-                print(f"{self.info} :: MQTTException :: {str(e)}")
-            elif isinstance(e, OSError):
-                print(f"{self.info} :: OSError :: {str(e)}")
-            else:
-                print(f"{self.info} :: Exception :: {str(e)}")
-            self.__reset()
+            self.__handle_exc(e)
 
-    def __reset(self, seconds=5):
-        print(f"Resetting in: {seconds}s")
-        utime.sleep(seconds)
-        machine.reset()
+    def update(self):
+        self.client.check_msg()
+        self.__print("Updated")
 
-    def publish(self, topic: bytes, msg: bytes):
-        self.client.publish(topic=topic, msg=msg)
-        print(f"{self.name} :: Published data")
+    def subscribe(self, feed: bytes, callback):
+        self.client.set_callback(f=callback)
+        self.client.subscribe(topic=feed)
+        self.__print("Subscribed")
+
+    def publish(self, feed: bytes, msg: bytes):
+        self.client.publish(topic=feed, msg=msg)
+        self.__print("Published data")
 
 
-class DHTController:
+class DHTController(Controller):
     def __init__(self, pin: str | int, name="DHT11"):
+        super().__init__(name=name)
+
         self.sensor = DHT11(machine.Pin(pin, machine.Pin.OUT))
-        self.name = name
 
     def measure(self):
         try:
             self.sensor.measure()
             return self
         except Exception as e:
-            if isinstance(e, OSError) and e.args[0] == 110:
-                print(f"{self.name} :: Timed out")
-            else:
-                print(f"{self.name} :: Exception :: {str(e)}")
-            machine.reset()
+            self.__handle_exc(e)
 
     def get_temperature(self):
         return self.sensor.temperature()
@@ -104,26 +120,37 @@ class DHTController:
         return self.sensor.humidity()
 
 
-def main():
-    WLANController(ssid=SSID, ssid_secret=SSID_SECRET)
-    client = MQTTController(client_id=hexlify(machine.unique_id()),
-                            host=HOST,
-                            port=PORT,
-                            user=ADA_USER,
-                            secret=ADA_SECRET)
-    sensor = DHTController(pin=28)
+class App:
+    def __init__(self):
+        self.wlan = WLANController(SSID, SSID_SECRET, 5)
+        self.mqtt = MQTTController(hexlify(machine.unique_id()), HOST, PORT, ADA_USER, ADA_SECRET)
+        self.sensor = DHTController(28)
+        self.sensor_feed = f"{ADA_USER}/f/sensor".encode()
+        self.led = machine.Pin("WL_GPIO0", machine.Pin.OUT)
+        self.led_feed = f"{ADA_USER}/f/led".encode()
 
-    while True:
-        sensor.measure()
-        data = ujson.dumps({
-            "temperature": sensor.get_temperature(),
-            "humidity": sensor.get_humidity()
-        })
+        self.mqtt.subscribe(self.led_feed, self.sub_callback)
 
-        client.publish(
-            topic=f"{ADA_USER}/f/picow".encode(),
-            msg=data.encode())
-        utime.sleep(10)
+    def sub_callback(self, feed: bytes, msg: bytes):
+        if msg == b"ON":
+            self.led.on()
+        elif msg == b"OFF":
+            self.led.off()
+
+    def run(self, interval=3):
+        while True:
+            self.mqtt.update()
+
+            self.sensor.measure()
+            data = ujson.dumps({
+                "temperature": self.sensor.get_temperature(),
+                "humidity": self.sensor.get_humidity()
+            })
+            self.mqtt.publish(
+                feed=self.sensor_feed,
+                msg=data.encode())
+
+            utime.sleep(interval)
 
 
-main()
+App().run()
