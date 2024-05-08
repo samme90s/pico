@@ -14,13 +14,12 @@ All commands and paths are relative to the project root.
 # ****************************************************
 
 # WiFi
-SSID        = ""
+SSID = ""
 SSID_SECRET = ""
 
 # Adafruit IO
-ADA_USER    = ""
-ADA_SECRET  = ""
-ADA_TOPIC   = f"{ADA_USER}/feeds/topic"
+ADA_USER = ""
+ADA_SECRET = ""
 
 # MQTT
 HOST = "io.adafruit.com"
