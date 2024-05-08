@@ -22,7 +22,7 @@ class CallbackStrategy:
         pass
 
 
-class SwitchCallbackStrategy(CallbackStrategy):
+class LEDCallbackStrategy(CallbackStrategy):
     def __init__(self, pin):
         self.led = machine.Pin("WL_GPIO0", machine.Pin.OUT)
 
@@ -60,6 +60,9 @@ class WLANController(Controller):
         if ssid is None or ssid_secret is None:
             raise ValueError("Service set -identifier (network name) or -secret (password) is incorrect")
 
+        if timeout < 30:
+            raise ValueError("Timeout must be greater than 30")
+
         # In wireless networking (specifically the IEEE 802.11 standards that
         # define Wi-Fi), a station (STA) interface (IF) refers to any device
         # that can connect to a wireless network.
@@ -73,25 +76,37 @@ class WLANController(Controller):
             STAT_WRONG_PASSWORD: "Failed due to incorrect password",
             STAT_NO_AP_FOUND: "Failed because no access point replied",
             STAT_CONNECT_FAIL: "Failed due to other problems",
-            STAT_GOT_IP: "Connection successful"
-        }
+            STAT_GOT_IP: "Connection successful"}
+
+    def __status(self):
+        return self.__status_message(self.sta_if.status())
+
+    def __status_message(self, status: int):
+        return self.stat_map.get(status, f"Unknown status: {status}")
 
     def connect(self):
         try:
             if not self.sta_if.isconnected():
-                self.__print("Connecting")
                 self.sta_if.active(True)
                 self.sta_if.connect(self.ssid, self.ssid_secret)
+                self.__print(self.__status())
 
                 elapsed = 0
                 while not self.sta_if.isconnected():
                     utime.sleep(1)
                     if (elapsed := elapsed + 1) > self.timeout:
-                        raise Exception(self.stat_map[self.sta_if.status()])
+                        raise Exception(self.__status())
 
+            if self.sta_if.isconnected():
+                self.__print(self.__status())
                 self.__print(f"Connected<{self.sta_if.ifconfig()}>")
         except Exception as e:
             self.__handle_exc(e)
+
+    def check_connection(self):
+        if not self.sta_if.isconnected():
+            self.__print(self.__status())
+            self.connect()
 
 
 class MQTTController(Controller):
@@ -124,7 +139,6 @@ class MQTTController(Controller):
         self.__check_connection()
 
         self.client.check_msg()
-        self.__print("Updated")
 
     def subscribe(self, feed: bytes, callback: CallbackStrategy):
         self.__check_connection()
@@ -166,10 +180,10 @@ class DHTController(Controller):
 
 class System:
     def __init__(self):
-        self.wlan = WLANController(SSID, SSID_SECRET, 1)
+        self.wlan = WLANController(SSID, SSID_SECRET, 30)
         self.mqtt = MQTTController(hexlify(machine.unique_id()), HOST, PORT, ADA_USER, ADA_SECRET)
         self.sensor = DHTController(28)
-        self.callback = SwitchCallbackStrategy("WL_GPIO0")
+        self.callback = LEDCallbackStrategy("WL_GPIO0")
 
         self.f_sensor = f"{ADA_USER}/f/sensor".encode()
         self.f_led = f"{ADA_USER}/f/led".encode()
@@ -180,6 +194,7 @@ class System:
 
     def run(self, interval=3):
         while True:
+            self.wlan.check_connection()
             self.mqtt.update()
 
             self.sensor.measure()
