@@ -119,7 +119,7 @@ class MQTTController(Controller):
 
     def update(self):
         '''
-        Asyncronous method that checks the latest message.
+        Asynchronous method that checks the latest message.
         '''
         self.__check_connection()
 
