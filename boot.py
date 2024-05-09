@@ -9,34 +9,23 @@ from config import ADA_SECRET, ADA_USER, HOST, PORT, SSID, SSID_SECRET
 from umqttsimple import MQTTClient
 
 
-class Controller:
-    def __init__(self, name="Controller"):
+class PICOW:
+    def __init__(self, name="PICO"):
         self.name = name
+        self.id = machine.unique_id()
+        self.id_hex = hexlify(self.id)
+        self.led = machine.Pin("WL_GPIO0", machine.Pin.OUT)
+
+    def led_on(self):
+        self.led.on()
+        self.__print("LED<on>")
+
+    def led_off(self):
+        self.led.off()
+        self.__print("LED<off>")
 
     def __print(self, msg: str):
         print(f"{self.name} :: {msg}")
-
-
-class LEDController(Controller):
-    def __init__(self, led_pin: str | int, name="LED"):
-        super().__init__(name)
-
-        self.led = machine.Pin(led_pin, machine.Pin.OUT)
-
-    def on(self):
-        self.led.on()
-        self.__print("ON")
-
-    def off(self):
-        self.led.off()
-        self.__print("OFF")
-
-
-class PICOWController(Controller):
-    def __init__(self, name="PICO"):
-        super().__init__(name=name)
-
-        self.led = LEDController("WL_GPIO0")
 
     def __handle_exc(self, exc: Exception, timeout=1):
         if timeout < 1:
@@ -46,7 +35,7 @@ class PICOWController(Controller):
         utime.sleep(timeout)
 
         self.__print("MACHINE<Resetting>")
-        self.led.off()
+        self.led_off()
         utime.sleep(timeout)
 
         machine.reset()
@@ -65,17 +54,17 @@ class CallbackStrategy:
 
 
 class LEDCallbackStrategy(CallbackStrategy):
-    def __init__(self, led: LEDController):
-        self.led = led
+    def __init__(self, pico: PICOW):
+        self.pico = pico
 
     def execute(self, feed: bytes, msg: bytes):
         if msg == b"ON":
-            self.led.on()
+            self.pico.led_on()
         elif msg == b"OFF":
-            self.led.off()
+            self.pico.led_off()
 
 
-class WLANController(PICOWController):
+class WLANController(PICOW):
     def __init__(self, ssid: str, ssid_secret: str, timeout=30, name="WLAN"):
         super().__init__(name=name)
 
@@ -131,18 +120,18 @@ class WLANController(PICOWController):
             self.connect()
 
 
-class MQTTController(PICOWController):
-    def __init__(self, client_id: bytes, host: str, port: int, user: str, secret: str, name="MQTT"):
+class MQTTController(PICOW):
+    def __init__(self, host: str, port: int, user: str, secret: str, name="MQTT"):
         super().__init__(name=name)
 
         self.client = MQTTClient(
-            client_id,
+            self.id_hex,
             host,
             port,
             user,
             secret,
             keepalive=60)
-        self.info = f"{client_id.decode()}@{host}:{port}"
+        self.info = f"{self.id_hex}@{host}:{port}"
         self.connected = False
 
     def connect(self):
@@ -180,7 +169,7 @@ class MQTTController(PICOWController):
             self.__handle_exc(Exception("Not connected"))
 
 
-class DHTController(PICOWController):
+class DHTController(PICOW):
     def __init__(self, pin: str | int, name="DHT11"):
         super().__init__(name=name)
 
@@ -205,17 +194,17 @@ class System:
         # Could be used to display system uptime.
         self.interval_elapsed = utime.time()
 
+        self.pico = PICOW()
         self.wlan = WLANController(SSID, SSID_SECRET, 30)
-        self.mqtt = MQTTController(hexlify(machine.unique_id()), HOST, PORT, ADA_USER, ADA_SECRET)
+        self.mqtt = MQTTController(HOST, PORT, ADA_USER, ADA_SECRET)
         self.sensor = DHTController(28)
-        self.led = LEDController("WL_GPIO0")
-        self.callback = LEDCallbackStrategy(self.led)
+        self.callback = LEDCallbackStrategy(self.pico)
 
         self.f_led = f"{ADA_USER}/f/led".encode()
         self.f_humidity = f"{ADA_USER}/f/humidity".encode()
         self.f_temperature = f"{ADA_USER}/f/temperature".encode()
 
-        self.led.on()
+        self.pico.led_on()
         self.wlan.connect()
         self.mqtt.connect()
         self.mqtt.subscribe(self.f_led, self.callback)
