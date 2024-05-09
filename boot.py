@@ -1,5 +1,4 @@
 import machine
-import ujson
 import utime
 from dht import DHT11
 from network import (STA_IF, STAT_CONNECT_FAIL, STAT_CONNECTING, STAT_GOT_IP,
@@ -8,29 +7,6 @@ from ubinascii import hexlify
 
 from config import ADA_SECRET, ADA_USER, HOST, PORT, SSID, SSID_SECRET
 from umqttsimple import MQTTClient
-
-
-# Workaround for MicroPython due to ABC not working
-# Should perhaps be placed in a seperate file named abc.py
-def abstractmethod(f):
-    return f
-
-
-class CallbackStrategy:
-    @abstractmethod
-    def execute(self, feed: bytes, msg: bytes):
-        pass
-
-
-class LEDCallbackStrategy(CallbackStrategy):
-    def __init__(self, pin):
-        self.led = machine.Pin("WL_GPIO0", machine.Pin.OUT)
-
-    def execute(self, feed: bytes, msg: bytes):
-        if msg == b"ON":
-            self.led.on()
-        elif msg == b"OFF":
-            self.led.off()
 
 
 class Controller:
@@ -51,6 +27,50 @@ class Controller:
         utime.sleep(timeout)
 
         machine.reset()
+
+
+class LEDController(Controller):
+    def __init__(self, pin: str | int, name="LED"):
+        super().__init__(name=name)
+
+        self.led = machine.Pin(pin, machine.Pin.OUT)
+
+    def toggle(self):
+        if self.led.value() == 0:
+            self.on()
+        else:
+            self.off()
+
+    def on(self):
+        self.led.on()
+        self.__print("ON")
+
+    def off(self):
+        self.led.off()
+        self.__print("OFF")
+
+
+# Workaround for MicroPython due to ABC not working
+# Should perhaps be placed in a seperate file named abc.py
+def abstractmethod(f):
+    return f
+
+
+class CallbackStrategy:
+    @abstractmethod
+    def execute(self, feed: bytes, msg: bytes):
+        pass
+
+
+class LEDCallbackStrategy(CallbackStrategy):
+    def __init__(self, led: LEDController):
+        self.led = led
+
+    def execute(self, feed: bytes, msg: bytes):
+        if msg == b"ON":
+            self.led.on()
+        elif msg == b"OFF":
+            self.led.off()
 
 
 class WLANController(Controller):
@@ -180,32 +200,51 @@ class DHTController(Controller):
 
 class System:
     def __init__(self):
+        # Could be used to display system uptime.
+        self.interval_elapsed = 0
+
         self.wlan = WLANController(SSID, SSID_SECRET, 30)
         self.mqtt = MQTTController(hexlify(machine.unique_id()), HOST, PORT, ADA_USER, ADA_SECRET)
         self.sensor = DHTController(28)
-        self.callback = LEDCallbackStrategy("WL_GPIO0")
+        self.led = LEDController("WL_GPIO0")
+        self.callback = LEDCallbackStrategy(self.led)
 
-        self.f_sensor = f"{ADA_USER}/f/sensor".encode()
         self.f_led = f"{ADA_USER}/f/led".encode()
+        self.f_humidity = f"{ADA_USER}/f/humidity".encode()
+        self.f_temperature = f"{ADA_USER}/f/temperature".encode()
 
+        self.led.on()
         self.wlan.connect()
         self.mqtt.connect()
         self.mqtt.subscribe(self.f_led, self.callback)
+        self.mqtt.publish(self.f_led, b"ON")
 
-    def run(self, interval=3):
+    def run(self, interval=1, interval_measure=30):
+        '''
+        Run the system with the specified interval and publish interval.
+
+        The publish interval is used to prevent adafruit.io rate limiting.
+        '''
+        if interval < 1:
+            raise ValueError("Interval must positive")
+
+        if interval_measure < 30:
+            raise ValueError("Measure interval must be greater than 30")
+
         while True:
             self.wlan.check_connection()
             self.mqtt.update()
 
-            self.sensor.measure()
-            data = ujson.dumps({
-                "temperature": self.sensor.get_temperature(),
-                "humidity": self.sensor.get_humidity()
-            })
-            self.mqtt.publish(
-                feed=self.f_sensor,
-                msg=data.encode())
+            if self.interval_elapsed % interval_measure == 0:
+                self.sensor.measure()
+                self.mqtt.publish(
+                    feed=self.f_humidity,
+                    msg=str(self.sensor.get_humidity()).encode())
+                self.mqtt.publish(
+                    feed=self.f_temperature,
+                    msg=str(self.sensor.get_temperature()).encode())
 
+            self.interval_elapsed += 1
             utime.sleep(interval)
 
 
