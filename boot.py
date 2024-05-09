@@ -220,11 +220,6 @@ class System:
         self.mqtt.publish(self.f_led, b"ON")
 
     def run(self, interval=1, interval_measure=30):
-        '''
-        Run the system with the specified interval and publish interval.
-
-        The publish interval is used to prevent adafruit.io rate limiting.
-        '''
         if interval < 1:
             raise ValueError("Interval must positive")
 
@@ -235,6 +230,7 @@ class System:
             self.wlan.check_connection()
             self.mqtt.update()
 
+            # Prevents rate limiting on Adafruit IO.
             if self.interval_elapsed % interval_measure == 0:
                 self.sensor.measure()
                 self.mqtt.publish(
