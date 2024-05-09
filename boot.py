@@ -171,7 +171,7 @@ class MQTTController(Controller):
         self.__check_connection()
 
         self.client.publish(topic=feed, msg=msg)
-        self.__print("Published data")
+        self.__print(f"Published<{msg}>")
 
     def __check_connection(self):
         if not self.connected:
@@ -201,7 +201,7 @@ class DHTController(Controller):
 class System:
     def __init__(self):
         # Could be used to display system uptime.
-        self.interval_elapsed = 0
+        self.interval_elapsed = utime.time()
 
         self.wlan = WLANController(SSID, SSID_SECRET, 30)
         self.mqtt = MQTTController(hexlify(machine.unique_id()), HOST, PORT, ADA_USER, ADA_SECRET)
@@ -240,7 +240,7 @@ class System:
                     feed=self.f_temperature,
                     msg=str(self.sensor.get_temperature()).encode())
 
-            self.interval_elapsed += 1
+            self.interval_elapsed = utime.time()
             utime.sleep(interval)
 
 
