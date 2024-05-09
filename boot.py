@@ -16,30 +16,12 @@ class Controller:
     def __print(self, msg: str):
         print(f"{self.name} :: {msg}")
 
-    def __handle_exc(self, exc: Exception, timeout=1):
-        if timeout < 1:
-            raise ValueError("Timeout must be greater than 1")
-
-        print(f"{self.name} :: {str(exc.__class__.__name__)}<{str(exc)}>")
-        utime.sleep(timeout)
-
-        self.__print("MACHINE<Resetting>")
-        utime.sleep(timeout)
-
-        machine.reset()
-
 
 class LEDController(Controller):
-    def __init__(self, pin: str | int, name="LED"):
-        super().__init__(name=name)
+    def __init__(self, led_pin: str | int, name="LED"):
+        super().__init__(name)
 
-        self.led = machine.Pin(pin, machine.Pin.OUT)
-
-    def toggle(self):
-        if self.led.value() == 0:
-            self.on()
-        else:
-            self.off()
+        self.led = machine.Pin(led_pin, machine.Pin.OUT)
 
     def on(self):
         self.led.on()
@@ -48,6 +30,26 @@ class LEDController(Controller):
     def off(self):
         self.led.off()
         self.__print("OFF")
+
+
+class PICOWController(Controller):
+    def __init__(self, name="PICO"):
+        super().__init__(name=name)
+
+        self.led = LEDController("WL_GPIO0")
+
+    def __handle_exc(self, exc: Exception, timeout=1):
+        if timeout < 1:
+            raise ValueError("Timeout must be greater than 1")
+
+        print(f"{self.name} :: {str(exc.__class__.__name__)}<{str(exc)}>")
+        utime.sleep(timeout)
+
+        self.__print("MACHINE<Resetting>")
+        self.led.off()
+        utime.sleep(timeout)
+
+        machine.reset()
 
 
 # Workaround for MicroPython due to ABC not working
@@ -73,7 +75,7 @@ class LEDCallbackStrategy(CallbackStrategy):
             self.led.off()
 
 
-class WLANController(Controller):
+class WLANController(PICOWController):
     def __init__(self, ssid: str, ssid_secret: str, timeout=30, name="WLAN"):
         super().__init__(name=name)
 
@@ -129,7 +131,7 @@ class WLANController(Controller):
             self.connect()
 
 
-class MQTTController(Controller):
+class MQTTController(PICOWController):
     def __init__(self, client_id: bytes, host: str, port: int, user: str, secret: str, name="MQTT"):
         super().__init__(name=name)
 
@@ -171,14 +173,14 @@ class MQTTController(Controller):
         self.__check_connection()
 
         self.client.publish(topic=feed, msg=msg)
-        self.__print(f"Published<{msg}>")
+        self.__print(f"Published<\"{feed.decode()}\": \"{msg.decode()}\">")
 
     def __check_connection(self):
         if not self.connected:
             self.__handle_exc(Exception("Not connected"))
 
 
-class DHTController(Controller):
+class DHTController(PICOWController):
     def __init__(self, pin: str | int, name="DHT11"):
         super().__init__(name=name)
 
