@@ -106,6 +106,7 @@ class WLANController(Controller):
 
     def connect(self):
         try:
+            self.__print(self.__status())
             if not self.sta_if.isconnected():
                 self.sta_if.active(True)
                 self.sta_if.connect(self.ssid, self.ssid_secret)
@@ -125,7 +126,6 @@ class WLANController(Controller):
 
     def check_connection(self):
         if not self.sta_if.isconnected():
-            self.__print(self.__status())
             self.connect()
 
 
