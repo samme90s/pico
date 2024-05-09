@@ -18,11 +18,11 @@ class PICOW:
 
     def led_on(self):
         self.led.on()
-        self.__print("LED<on>")
+        self.__print("LED<On>")
 
     def led_off(self):
         self.led.off()
-        self.__print("LED<off>")
+        self.__print("LED<Off>")
 
     def __print(self, msg: str):
         print(f"{self.name} :: {msg}")
@@ -54,14 +54,14 @@ class CallbackStrategy:
 
 
 class LEDCallbackStrategy(CallbackStrategy):
-    def __init__(self, pico: PICOW):
-        self.pico = pico
+    def __init__(self, device: PICOW):
+        self.device = device
 
     def execute(self, feed: bytes, msg: bytes):
         if msg == b"ON":
-            self.pico.led_on()
+            self.device.led_on()
         elif msg == b"OFF":
-            self.pico.led_off()
+            self.device.led_off()
 
 
 class WLANController(PICOW):
@@ -194,17 +194,17 @@ class System:
         # Could be used to display system uptime.
         self.interval_elapsed = utime.time()
 
-        self.pico = PICOW()
+        self.device = PICOW()
         self.wlan = WLANController(SSID, SSID_SECRET, 30)
         self.mqtt = MQTTController(HOST, PORT, ADA_USER, ADA_SECRET)
         self.sensor = DHTController(28)
-        self.callback = LEDCallbackStrategy(self.pico)
+        self.callback = LEDCallbackStrategy(self.device)
 
         self.f_led = f"{ADA_USER}/f/led".encode()
         self.f_humidity = f"{ADA_USER}/f/humidity".encode()
         self.f_temperature = f"{ADA_USER}/f/temperature".encode()
 
-        self.pico.led_on()
+        self.device.led_on()
         self.wlan.connect()
         self.mqtt.connect()
         self.mqtt.subscribe(self.f_led, self.callback)
