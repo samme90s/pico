@@ -131,7 +131,7 @@ class MQTTController(PICOW):
             user,
             secret,
             keepalive=60)
-        self.info = f"{self.id_hex}@{host}:{port}"
+        self.info = f"{self.id_hex.decode()}@{host}:{port}"
         self.connected = False
 
     def connect(self):
