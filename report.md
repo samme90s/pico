@@ -8,20 +8,21 @@ The objective of this project is to build a temperature and humidity sensor that
 
 ### Why
 
-I have chosen to build this project because I want to learn more about how to build internet of thing (IoT) -devices and how to connect them to the internet. I think this project will give me a good understanding of how to build IoT-devices and how to present data in a meaningful way.
+I chose to this the techniques and hardware because I wanted to learn more about how to build IoT (internet of thing) -devices and how to connect them to the internet.
 
 ### Insights
 
-The project will give insights to the possibilites of internet of things and how to apply code to real world applications. Based on the data collected, the user can see trends over time and make decisions based on the data, even though the DHT11 is fairly inaccurate.
+The project will give insights to the possibilites of internet of things and how to apply code to real world applications. Based on the data collected, the user can see trends over time, make decisions based on the data and present the data in a meaningful way, even though the DHT11 is fairly inaccurate. It also gave me a good understanding of how to build IoT-devices.
 
 ## Material
 
 All the material can be picked up at Elektro:Kit (Sweden). Here are the minimum articles required:
-| Type | Article | Price |
+
+| Type                        | Article                                                                        | Price  |
 | --------------------------- | ------------------------------------------------------------------------------ | ------ |
-| Microcontroller (PicoWH): | [41019114](https://www.electrokit.com/raspberry-pi-pico-wh) | ~90SEK |
+| Microcontroller (PicoWH):   | [41019114](https://www.electrokit.com/raspberry-pi-pico-wh)                    | ~90SEK |
 | Temperature sensor (DHT11): | [41015728](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | ~50SEK |
-| Wires (Female-to-Female): | [41015695](https://www.electrokit.com/labsladd-1-pin-hona-hona-150mm-10-pack) | ~30SEK |
+| Wires (Female-to-Female):   | [41015695](https://www.electrokit.com/labsladd-1-pin-hona-hona-150mm-10-pack)  | ~30SEK |
 
 Wires are needed to connect the sensor to the Pico.
 
