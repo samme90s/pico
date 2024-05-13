@@ -53,7 +53,7 @@ Depending on the version of DHT11, a resistor might be needed.
 
 ### Software
 
-- [Python](https://www.python.org/downloads/)
+[Python](https://www.python.org/downloads/)
 
 ## Construction
 
