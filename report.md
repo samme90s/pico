@@ -50,8 +50,6 @@ Depending on the version of DHT11, a resistor might be needed.
 | ----------------------------------------------------------------------------------- | ------------------- |
 | [MicroPico](https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go) | MicroPython support |
 
-How is the device programmed? Which IDE are you using? Describe all steps from flashing the firmware to installing plugins in your favorite editor and how flashing is done on MicroPython. The aim is that a beginner should be able to understand.
-
 ### Software
 
 - [Python](https://www.python.org/downloads/)
