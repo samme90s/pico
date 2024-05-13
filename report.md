@@ -57,8 +57,8 @@ Depending on the version of DHT11, a resistor might be needed.
 
 ## Construction
 
-**IMPORTANT!** Make sure to not confuse pin numbers with GPIO numbers. The Pico has both, and it is important to use the correct one.
-The GPIO numbers are the ones used in the code and will therefore be used in this tutorial.
+**IMPORTANT!** Make sure to not confuse `Pin` numbers with `GPIO` numbers. The Pico has both, and it is important to use the correct one.
+The `GPIO` numbers are the ones used in the code and will therefore be used in this tutorial.
 
 | Device | Diagram                                                                                                              |
 | ------ | -------------------------------------------------------------------------------------------------------------------- |
