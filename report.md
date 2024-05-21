@@ -179,7 +179,7 @@ Dashboards may be used to control a feed or display its data.
 
 ### Video
 
-[Presentation](#link)
+[Presentation](https://youtu.be/cJ6gIpHRpGc)
 
 ### Reflection
 
