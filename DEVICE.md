@@ -1,6 +1,6 @@
-# Pico
+# Device Guide (Pico)
 
-Samuel Svensson
+Author: [Samuel Svensson](https://github.com/samme90s)
 
 ## Objective (1hr)
 
@@ -181,7 +181,7 @@ Dashboards may be used to control a feed or display its data.
 
 [Presentation](https://youtu.be/cJ6gIpHRpGc)
 
-### Reflection
+### Reflections
 
 The project was fairly difficult at first as I had never worked with MicroPython before. Furthermore, understanding how I had to find libraries myself and clone these was not too obvious. However, after some time, I got the hang of it and was quite fun to work on.
 

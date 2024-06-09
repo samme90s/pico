@@ -2,7 +2,9 @@
 
 **IMPORTANT** -- All commands are executed from the root directory of the project.
 
-## Environment
+## Device
+
+### Setup
 
 ```py
 # src/config.py
@@ -23,6 +25,8 @@ ADA_SECRET = ""
 HOST = "io.adafruit.com"
 PORT = 1883
 ```
+
+See [DEVICE.md](DEVICE.md) for more information.
 
 ## Mosquitto
 

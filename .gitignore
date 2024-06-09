@@ -1,7 +1,9 @@
-# Created by https://www.toptal.com/developers/gitignore/api/vim,linux,macos,python,windows,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=vim,linux,macos,python,windows,visualstudiocode
+# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,windows,visualstudiocode,python
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,windows,visualstudiocode,python
 
-### Mosquitto ###
+### Self ###
+
+# Mosquitto
 pwfile
 
 ### Linux ###
@@ -175,7 +177,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-config.py
 .env
 .venv
 env/
@@ -225,26 +226,6 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-### Vim ###
-# Swap
-[._]*.s[a-v][a-z]
-!*.svg  # comment out if you don't need vector files
-[._]*.sw[a-p]
-[._]s[a-rt-v][a-z]
-[._]ss[a-gi-z]
-[._]sw[a-p]
-
-# Session
-Session.vim
-Sessionx.vim
-
-# Temporary
-.netrwhist
-# Auto-generated tag files
-tags
-# Persistent undo
-[._]*.un~
-
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -290,4 +271,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/vim,linux,macos,python,windows,visualstudiocode
+# End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,visualstudiocode,python
