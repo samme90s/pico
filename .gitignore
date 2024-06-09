@@ -1,8 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/vim,linux,macos,python,windows,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,linux,macos,python,windows,visualstudiocode
 
-### Dev ###
-.docs/
+### Mosquitto ###
+pwfile
 
 ### Linux ###
 *~

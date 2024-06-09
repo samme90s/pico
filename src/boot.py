@@ -5,8 +5,8 @@ from network import (STA_IF, STAT_CONNECT_FAIL, STAT_CONNECTING, STAT_GOT_IP,
                      STAT_IDLE, STAT_NO_AP_FOUND, STAT_WRONG_PASSWORD, WLAN)
 from ubinascii import hexlify
 
-from config import ADA_SECRET, ADA_USER, HOST, PORT, SSID, SSID_SECRET
-from umqttsimple import MQTTClient
+from .config import ADA_SECRET, ADA_USER, HOST, PORT, SSID, SSID_SECRET
+from .umqttsimple import MQTTClient
 
 
 class PICOW:
