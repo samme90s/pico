@@ -6,6 +6,9 @@
 # Mosquitto
 pwfile
 
+# Environment
+config*
+
 ### Linux ###
 *~
 
