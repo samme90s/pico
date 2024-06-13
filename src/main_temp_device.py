@@ -3,10 +3,10 @@ import utime
 # Relative imports does not work with MicroPython.
 # Otherwise it would be wise to use "from .config import ..." instead.
 from config import ADA_USER
-from scripts import DHT, MQTT, WIFI, LEDCallbackStrategy
+from scripts import DHT, MQTT, WIFI
 
 
-class System:
+class App:
     def __init__(self):
         # Could be used to display system uptime.
         self.interval_elapsed = utime.time()
@@ -20,7 +20,6 @@ class System:
 
         self.wifi.connect()
         self.mqtt.connect()
-        self.mqtt.subscribe(self.f_temperature, LEDCallbackStrategy())
 
     def run(self, interval=1, interval_measure=30):
         try:
@@ -51,4 +50,4 @@ class System:
             self.wifi.disconnect()
 
 
-System().run()
+App().run()

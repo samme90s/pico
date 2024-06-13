@@ -21,23 +21,6 @@ class CallbackStrategy:
         pass
 
 
-class LEDCallbackStrategy(CallbackStrategy):
-    def __init__(self):
-        self.input = machine.Pin("GP15", machine.Pin.IN, machine.Pin.PULL_UP)
-        self.output = machine.Pin("GP15", machine.Pin.OUT)
-
-    def execute(self, feed: bytes, msg: bytes):
-        reading = int(msg.decode())
-
-        if reading < 7 or reading > 9:
-            if not self.input.value():
-                print("led on")
-                self.output.on()
-        elif self.input.value():
-            print("led off")
-            self.output.off()
-
-
 class Controller:
     def __init__(self, name="CTRL"):
         self.name = name
