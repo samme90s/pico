@@ -21,12 +21,12 @@ SSID_SECRET = ""
 ADA_USER = ""
 ADA_SECRET = ""
 
-# MQTT
+## MQTT
 HOST = "io.adafruit.com"
 PORT = 1883
 ```
 
-See [DEVICE.md](DEVICE.md) for more information.
+See **[DEVICE.md](DEVICE.md)** for more information.
 
 ## Mosquitto
 
@@ -37,6 +37,8 @@ Create a password file:
 ```bash
 touch broker/pwfile
 ```
+
+Run the broker:
 
 ```bash
 docker compose -f broker/docker-compose.yml up -d --force-recreate
