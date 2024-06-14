@@ -82,6 +82,7 @@ class WIFI(Controller):
 
                 elapsed = 0
                 while not self.sta_if.isconnected():
+                    self._print("Connecting...")
                     utime.sleep(1)
                     if (elapsed := elapsed + 1) > self.timeout:
                         raise Exception(self.__status())
