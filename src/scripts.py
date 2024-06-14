@@ -17,7 +17,7 @@ def abstractmethod(f):
 
 class CallbackStrategy:
     @abstractmethod
-    def execute(self, feed: bytes, msg: bytes):
+    def execute(self, topic: bytes, msg: bytes):
         pass
 
 
@@ -159,18 +159,18 @@ class MQTT(Controller):
         # https://github.com/micropython/micropython/issues/5451
         self.client.check_msg()
 
-    def subscribe(self, feed: bytes, callback: CallbackStrategy):
+    def subscribe(self, topic: bytes, callback: CallbackStrategy):
         self.__check_connection()
 
         self.client.set_callback(f=callback.execute)
-        self.client.subscribe(topic=feed)
+        self.client.subscribe(topic=topic)
         self._print("Subscribed")
 
-    def publish(self, feed: bytes, msg: bytes):
+    def publish(self, topic: bytes, msg: bytes):
         self.__check_connection()
 
-        self.client.publish(topic=feed, msg=msg)
-        self._print(f"Published<\"{feed.decode()}\": \"{msg.decode()}\">")
+        self.client.publish(topic=topic, msg=msg)
+        self._print(f"Published<\"{topic.decode()}\": \"{msg.decode()}\">")
 
     def __check_connection(self):
         if not self.connected:

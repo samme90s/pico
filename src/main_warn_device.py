@@ -10,7 +10,7 @@ class LED(CallbackStrategy):
         self.input = machine.Pin("GP15", machine.Pin.IN, machine.Pin.PULL_UP)
         self.output = machine.Pin("GP15", machine.Pin.OUT)
 
-    def execute(self, feed: bytes, msg: bytes):
+    def execute(self, topic: bytes, msg: bytes):
         reading = int(msg.decode())
 
         if reading < 7 or reading > 9:
