@@ -2,9 +2,9 @@
 
 **IMPORTANT** -- All commands are executed from the root directory of the project.
 
-## Device
+## About
 
-See **[DEVICE.md](DEVICE.md)** for more information.
+See **[ABOUT.md](ABOUT.md)** for more information.
 
 ### Setup
 
