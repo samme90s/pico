@@ -105,12 +105,25 @@ Due to the nature of MQTT topics are used. The topics are defined to comply with
 
 ### Code
 
+The code is already well defined and self explanatory. However, here are some key points, including the structure of the project.
+
+```plaintext
+.
+├── src
+│   ├── alert_device
+│   │   ├── boot.py     (Main file)
+│   ├── sensor_device
+│   │   ├── boot.py     (Main file)
+│   ├── config.py       (Configurations and credentials)
+│   ├── umqttsimple.py  (MQTT module)
+│   └── scripts.py      (Controllers, strategies and services)
+```
+
 ```py
-# example
-#
 # Since normal Python does not work on the Pico, we need to import the MicroPython
 # modules and allows us to control the hardware. The ones below are just a few examples
 # of what is available. Make note of the distinction of the modules and the standard Python ones.
+
 import machine
 import ubinascii
 import utime
@@ -124,6 +137,7 @@ import utime
 #
 # Also offers a strategy for implementing a callback for the subscribe method
 # found in the MQTT controller.
+
 def abstractmethod(f):
     return f
 
