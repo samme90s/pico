@@ -53,13 +53,18 @@ class Controller:
 
 class WIFI(Controller):
     def __init__(self, timeout=30, name="WLAN"):
+        """
+        Initializes the WIFI controller with a specified timeout and name.
+        Raises ValueError: If either SSID or SSID_SECRET is None, or if timeout
+        is less than 30.
+        """
         super().__init__(name=name)
-
-        if SSID is None or SSID_SECRET is None:
-            raise ValueError("Service set -identifier (network name) or -secret (password) is incorrect")
 
         if timeout < 30:
             raise ValueError("Timeout must be greater than 30")
+
+        if SSID is None or SSID_SECRET is None:
+            raise ValueError("Service set -identifier (network name) or -secret (password) is incorrect")
 
         # In wireless networking (specifically the IEEE 802.11 standards that
         # define Wi-Fi), a station (STA) interface (IF) refers to any device
@@ -75,12 +80,23 @@ class WIFI(Controller):
             STAT_GOT_IP: "Connection successful"}
 
     def __status(self):
+        """
+        Retrieves the current status message of the WIFI connection.
+        """
         return self.__status_message(self.sta_if.status())
 
     def __status_message(self, status: int):
+        """
+        Converts a status code into a human-readable status message.
+        """
         return self.stat_map.get(status, f"Unknown status: {status}")
 
     def connect(self):
+        """
+        Attempts to connect to the WIFI network using the SSID and SSID_SECRET.
+        It will try to connect until the specified timeout is reached.
+        Raises Exception: If unable to connect within the timeout period.
+        """
         try:
             self._print(self.__status())
             if not self.sta_if.isconnected():
@@ -102,6 +118,9 @@ class WIFI(Controller):
             self._handle_exc(e)
 
     def disconnect(self):
+        """
+        Disconnects from the WIFI network if currently connected.
+        """
         try:
             if self.sta_if.isconnected():
                 self._print("Disconnecting")
@@ -111,13 +130,13 @@ class WIFI(Controller):
         except Exception as e:
             self._handle_exc(e)
 
-    def check_connection(self):
-        if not self.sta_if.isconnected():
-            self.connect()
-
 
 class MQTT(Controller):
     def __init__(self, name="MQTT"):
+        """
+        Initializes the MQTT controller with a specified name.
+        Raises ValueError: If HOST, PORT, ADA_USER, or ADA_SECRET is None.
+        """
         super().__init__(name=name)
 
         if HOST is None:
@@ -140,6 +159,10 @@ class MQTT(Controller):
         self.connected = False
 
     def connect(self):
+        """
+        Attempts to connect to the MQTT broker using the provided credentials.
+        Raises Exception: If the connection attempt fails.
+        """
         try:
             self._print(f"Connecting<{self.info}>")
             self.client.connect()
@@ -149,6 +172,9 @@ class MQTT(Controller):
             self._handle_exc(e)
 
     def disconnect(self):
+        """
+        Disconnects from the MQTT broker if currently connected.
+        """
         try:
             if self.connected:
                 self._print(f"Connecting<{self.info}>")
@@ -169,6 +195,9 @@ class MQTT(Controller):
         self.client.check_msg()
 
     def subscribe(self, topic: bytes, callback: CallbackStrategy):
+        """
+        Subscribes to a specific topic on the MQTT broker.
+        """
         self.__check_connection()
 
         self.client.set_callback(f=callback.execute)
@@ -176,23 +205,38 @@ class MQTT(Controller):
         self._print("Subscribed")
 
     def publish(self, topic: bytes, msg: bytes):
+        """
+        Publishes a message to a specific topic on the MQTT broker.
+        """
         self.__check_connection()
 
         self.client.publish(topic=topic, msg=msg)
         self._print(f"Published<\"{topic.decode()}\": \"{msg.decode()}\">")
 
     def __check_connection(self):
+        """
+        Checks if there is a current connection to the MQTT broker.
+        Raises Exception: If not currently connected to the MQTT broker.
+        """
         if not self.connected:
             self._handle_exc(Exception("Not connected"))
 
 
 class DHT(Controller):
     def __init__(self, pin: str | int, name="DHT11"):
+        """
+        Initializes the DHT sensor controller with a specified pin and name.
+        """
         super().__init__(name=name)
 
         self.sensor = DHT11(machine.Pin(pin, machine.Pin.OUT))
 
     def measure(self):
+        """
+        Triggers a measurement on the DHT sensor.
+        Returns: Self for chaining.
+        Raises Exception: If the measurement fails.
+        """
         try:
             self.sensor.measure()
             return self
@@ -200,7 +244,13 @@ class DHT(Controller):
             self._handle_exc(e)
 
     def get_temperature(self):
+        """
+        Retrieves the last measured temperature from the DHT sensor.
+        """
         return self.sensor.temperature()
 
     def get_humidity(self):
+        """
+        Retrieves the last measured humidity from the DHT sensor.
+        """
         return self.sensor.humidity()

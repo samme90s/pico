@@ -8,9 +8,11 @@ from scripts import DHT, MQTT, WIFI
 
 class App:
     def __init__(self):
-        # Could be used to display system uptime.
-        self.interval_elapsed = utime.time()
-
+        """
+        Initializes the application, setting up WIFI and MQTT connections, and
+        preparing the DHT sensor. It also prepares the topics for humidity and
+        temperature to publish to.
+        """
         self.wifi = WIFI(timeout=30)
         self.mqtt = MQTT()
         self.sensor = DHT(pin="GP28")
@@ -22,6 +24,12 @@ class App:
         self.mqtt.connect()
 
     def run(self, interval=1, interval_measure=30):
+        """
+        Runs the main application loop, publishing sensor data at specified
+        intervals and updating MQTT messages.
+        Raises ValueError: If the interval is not positive or if
+        interval_measure is less than 30.
+        """
         try:
             if interval < 1:
                 raise ValueError("Interval must positive")
@@ -30,11 +38,10 @@ class App:
                 raise ValueError("Measure interval must be greater than 30")
 
             while True:
-                self.wifi.check_connection()
                 self.mqtt.update()
 
                 # Prevents rate limiting on Adafruit IO.
-                if self.interval_elapsed % interval_measure == 0:
+                if utime.time() % interval_measure == 0:
                     self.sensor.measure()
                     self.mqtt.publish(
                         feed=self.f_humidity,
@@ -43,7 +50,6 @@ class App:
                         feed=self.f_temperature,
                         msg=str(self.sensor.get_temperature()).encode())
 
-                self.interval_elapsed = utime.time()
                 utime.sleep(interval)
         finally:
             self.mqtt.disconnect()
