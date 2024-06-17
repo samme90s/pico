@@ -79,7 +79,7 @@ All the material can be picked up at Elektro:Kit (Sweden). Here are the minimum 
 
 ### Construction
 
-**IMPORTANT!** Make sure to not confuse `Pin` numbers with `GPIO` numbers. The Pico has both, and it is important to use the correct one.
+**IMPORTANT** -- Make sure to not confuse `Pin` numbers with `GPIO` numbers and the Pico has both.
 The `GPIO` numbers are the ones used in the code and will therefore be used in this tutorial. See respective diagrams: [PicoW](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files-2) and [DHT11](https://www.electrokit.com/upload/product/41015/41015728/41015728_-_Digital_Temperature_Humidity_Sensor.pdf).
 
 ![Both wired components](.readme/wiring.png "Both wired components")
@@ -87,6 +87,11 @@ The `GPIO` numbers are the ones used in the code and will therefore be used in t
 ### Adafruit IO
 
 Adafruit IO is a cloud service that allows you to send and receive data from your devices. It is easy to use and has a free tier that is sufficient for this project.
+
+1. Create an account at [Adafruit IO](https://io.adafruit.com/).
+2. Enter your credentials in the `config.py` file (see [Development](#development) above).
+
+Feeds are the data points and stores the data sent from the device and represent the MQTT topics. Furthermore, creating a dashboard allows the user to control a feed or display its data.
 
 ### Data flow / Connectivity
 
@@ -96,11 +101,17 @@ Both devices are connected to the internet via the WiFi protocol (utilizing the 
 
 The data is sent through MQTT (Message Queuing Telemetry Transport) which is a lightweight messaging protocol. This is done utilizing the [umqtt.simple](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.simple/umqtt/simple.py) module. This protocol suited the project and is commonly used in IoT applications. It offers the subscribe and publish functionality that is needed, whilst being lightweight and easy to use.
 
-Due to the nature of MQTT topics are used. The topics are defined to comply with Adafruit.io standards (see [Adafruit IO](#adafruit-io) section below). The data sent to these topics is a byte string, either representing the state of the LED or the sensor readings.
+Due to the nature of MQTT topics are used. The topics are defined to comply with Adafruit.io standards (see [Adafruit IO](#adafruit-io) above). The data sent to these topics is a byte string, either representing the state of the LED or the sensor readings.
 
-### Adafruit IO
+### Code
 
-Feeds are the data points and stores the data sent from the device. These represent the MQTT topics. Furthermore, creating a dashboard allows the user to control a feed or display its data.
+```py
+# Since normal Python does not work on the Pico, we need to import the MicroPython modules and allows us to control the hardware.
+# The ones below are just a few examples of what is available. Make not of the distinction of the modules and the standard Python ones.
+import machine
+import ubinascii
+import utime
+```
 
 ### Presentation and Reflections
 
