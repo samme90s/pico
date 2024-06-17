@@ -2,7 +2,7 @@
 
 ## Setup
 
-Create a password file:
+Create necessary files:
 
 ```bash
 touch broker/docker-compose.yml &&
