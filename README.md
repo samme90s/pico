@@ -101,7 +101,7 @@ Both devices are connected to the internet via the WiFi protocol (utilizing the 
 
 The data is sent through MQTT (Message Queuing Telemetry Transport) which is a lightweight messaging protocol. This is done utilizing the [MicroPython UMQTT](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.simple/umqtt/simple.py) module. This protocol suited the project and is commonly used in IoT applications. It offers the subscribe and publish functionality that is needed, whilst being lightweight and easy to use.
 
-Due to the nature of MQTT topics are used. The topics are defined to comply with Adafruit.io standards (see [Adafruit IO](#adafruit-io) above). The data sent to these topics is a byte string, either representing the state of the LED or the sensor readings.
+Due to the nature of MQTT, topics are used. The topics are defined to comply with Adafruit.io standards (see [Adafruit IO](#adafruit-io) above). The data sent to these topics is a byte string, in this example representing the sensor readings.
 
 ### Code
 
@@ -119,24 +119,26 @@ The code is already well defined and self explanatory. However, here are some ke
 │   └── scripts.py      (Controllers, strategies and services)
 ```
 
+Since normal Python does not work on the Pico, we need to import the MicroPython
+modules and allows us to control the hardware. The ones below are just a few examples
+of what is available. Make note of the distinction of the modules and the standard Python ones.
+
 ```py
-# Since normal Python does not work on the Pico, we need to import the MicroPython
-# modules and allows us to control the hardware. The ones below are just a few examples
-# of what is available. Make note of the distinction of the modules and the standard Python ones.
 
 import machine
 import ubinascii
 import utime
 ```
 
+src/scripts.py
+
+Mainly contains the controllers for different components and services that is
+then used in respective boot or main file.
+
+Also offers a strategy for implementing a callback for the subscribe method
+found in the MQTT controller.
+
 ```py
-# src/scripts.py
-#
-# Mainly contains the controllers for different components and services that is
-# then used in respective boot or main file.
-#
-# Also offers a strategy for implementing a callback for the subscribe method
-# found in the MQTT controller.
 
 def abstractmethod(f):
     return f
@@ -205,4 +207,6 @@ Due to the simplicity of the project I also looked at setting up my own MQTT bro
 
 Using 3D printing and encasing the hardware would allow for a more serious approach to actually utilizing the sensor in a real world scenario. My presentation only illustrates the potential and could be done more seriously. I do not plan on keeping this solution and therefore won't invest in a permanent build.
 
-Most modern fridges have alarms that alert the user if the temperature is outside its correct range. However, this project could still be useful for older ones. It also allows for the user to see trends which can act as a debugging tool if the fridge is not working as intended. Possibly following climate changes such as heatwaves and other events that could affect its performance.
+Most modern fridges have alarms that alert the user if the temperature is outside its correct range. However, this project could still be useful for older ones. It also allows for the user to see trends which could act as a debugging tool if the fridge is not working as intended. Furthermore, following climate and analyzing the temperature and humidity could be an interesting idea.
+
+Overall, I have extended my knowledge within the area even I didn't get to do what I originally wanted. I have learned a lot about the areas outside the scope of my project aswell and am glad to have gained those insights. Wrapping it I would say that the project could have been done more seriously as previously mentioned, but I am okay with the end result.
