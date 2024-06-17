@@ -42,7 +42,7 @@ Author: [Samuel Svensson](https://github.com/samme90s)
 
 ### Objective
 
-The objective of this project is to build a sensor for fridges that alerts the user if the temperature is outside its correct range of 6-8°C. Two MCUs will be connected to the internet and one will transmit data to a cloud service whilst the other subscribes to this data and analyzes it. Additionally, the project will give insights into the possibilities of internet of things and how to apply code to real world applications. Based on the data collected, the user can see trends over time, make decisions based on the data and present the data in a meaningful way, and apply a solution to prevent a possible problem.
+The objective of this project is to build a sensor for fridges that alerts the user if the temperature is outside its correct range of 2-8°C. Two MCUs will be connected to the internet and one will transmit data to a cloud service whilst the other subscribes to this data and analyzes it. Additionally, the project will give insights into the possibilities of internet of things and how to apply code to real world applications. Based on the data collected, the user can see trends over time, make decisions based on the data and present the data in a meaningful way, and apply a solution to prevent a possible problem.
 
 ### Material
 
