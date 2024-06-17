@@ -106,8 +106,9 @@ Due to the nature of MQTT topics are used. The topics are defined to comply with
 ### Code
 
 ```py
-# Since normal Python does not work on the Pico, we need to import the MicroPython modules and allows us to control the hardware.
-# The ones below are just a few examples of what is available. Make not of the distinction of the modules and the standard Python ones.
+# Since normal Python does not work on the Pico, we need to import the MicroPython
+# modules and allows us to control the hardware. The ones below are just a few examples
+# of what is available. Make note of the distinction of the modules and the standard Python ones.
 import machine
 import ubinascii
 import utime
