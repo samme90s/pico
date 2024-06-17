@@ -66,7 +66,7 @@ All the material can be picked up at Elektro:Kit (Sweden). Here are the minimum 
 
 #### Flashing
 
-1. Flash the microcontroller with MicroPython. The firmware can be downloaded from the official website. Ensure that the device corresponds correctly to the driver (in our case: [MicroPython-PicoW](https://micropython.org/download/RPI_PICO_W/))
+1. Flash the microcontroller with MicroPython. The firmware can be downloaded from the official website. Ensure that the device corresponds correctly to the driver (in our case: [MicroPython](https://micropython.org/download/RPI_PICO_W/))
 2. Hold the **BOOTSEL** button on the Pico whilst connecting it to the computer.
 3. Unzip the downloaded file and move it on to the device.
 4. Wait a few seconds and then reconnect the device (**NOT** holding the **BOOTSEL** button).
@@ -99,7 +99,7 @@ Both devices are connected to the internet via the WiFi protocol (utilizing the 
 
 ### Information Transport
 
-The data is sent through MQTT (Message Queuing Telemetry Transport) which is a lightweight messaging protocol. This is done utilizing the [umqtt.simple](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.simple/umqtt/simple.py) module. This protocol suited the project and is commonly used in IoT applications. It offers the subscribe and publish functionality that is needed, whilst being lightweight and easy to use.
+The data is sent through MQTT (Message Queuing Telemetry Transport) which is a lightweight messaging protocol. This is done utilizing the [MicroPython UMQTT](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.simple/umqtt/simple.py) module. This protocol suited the project and is commonly used in IoT applications. It offers the subscribe and publish functionality that is needed, whilst being lightweight and easy to use.
 
 Due to the nature of MQTT topics are used. The topics are defined to comply with Adafruit.io standards (see [Adafruit IO](#adafruit-io) above). The data sent to these topics is a byte string, either representing the state of the LED or the sensor readings.
 
