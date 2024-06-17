@@ -106,12 +106,79 @@ Due to the nature of MQTT topics are used. The topics are defined to comply with
 ### Code
 
 ```py
+# example
+#
 # Since normal Python does not work on the Pico, we need to import the MicroPython
 # modules and allows us to control the hardware. The ones below are just a few examples
 # of what is available. Make note of the distinction of the modules and the standard Python ones.
 import machine
 import ubinascii
 import utime
+```
+
+```py
+# src/scripts.py
+#
+# Mainly contains the controllers for different components and services that is
+# then used in respective boot or main file.
+#
+# Also offers a strategy for implementing a callback for the subscribe method
+# found in the MQTT controller.
+def abstractmethod(f):
+    return f
+
+
+class CallbackStrategy:
+    @abstractmethod
+    def execute(self, topic: bytes, msg: bytes):
+        pass
+
+
+class Controller:
+    def __init__(self, name="CTRL"):
+        """
+        The name is used for debugging purposes
+        and is added to the log whenever a message is printed.
+        """
+        self.name = name
+
+        self._print("Initializing")
+
+    def _print(self, msg: str):
+        """
+        Utilizes the name from the constructor and takes a message.
+        """
+        print(f"{self.name} :: {msg}")
+
+    def _handle_exc(self, exc: Exception):
+        """
+        Handles exceptions and prints them to the console.
+        The device is then reset after a second.
+        """
+        self._print(f"{str(exc.__class__.__name__)}<{str(exc)}>")
+        utime.sleep(1)
+
+        self._print("MACHINE<Resetting>")
+        utime.sleep(1)
+
+        machine.reset()
+
+
+class WIFI(Controller):
+    ...
+
+
+class MQTT(Controller):
+    ...
+
+    def subscribe(self, topic: bytes, callback: CallbackStrategy):
+        ...
+
+    ...
+
+
+class DHT(Controller):
+    ...
 ```
 
 ### Presentation and Reflections

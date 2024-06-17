@@ -23,22 +23,30 @@ class CallbackStrategy:
 
 class Controller:
     def __init__(self, name="CTRL"):
+        """
+        The name is used for debugging purposes
+        and is added to the console whenever a message is printed.
+        """
         self.name = name
 
         self._print("Initializing")
 
     def _print(self, msg: str):
+        """
+        Utilizes the name from the constructor and takes a message.
+        """
         print(f"{self.name} :: {msg}")
 
-    def _handle_exc(self, exc: Exception, timeout=1):
-        if timeout < 1:
-            raise ValueError("Timeout must be greater than 1")
-
+    def _handle_exc(self, exc: Exception):
+        """
+        Handles exceptions and prints them to the console.
+        The device is then reset after a second.
+        """
         self._print(f"{str(exc.__class__.__name__)}<{str(exc)}>")
-        utime.sleep(timeout)
+        utime.sleep(1)
 
         self._print("MACHINE<Resetting>")
-        utime.sleep(timeout)
+        utime.sleep(1)
 
         machine.reset()
 
