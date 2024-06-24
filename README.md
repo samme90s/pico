@@ -36,7 +36,7 @@ PORT = 1883
 
 ## Guide and Walkthrough
 
-Temperature Alarm System
+**Temperature Alarm System**
 
 Author: [Samuel Svensson](https://github.com/samme90s)
 
