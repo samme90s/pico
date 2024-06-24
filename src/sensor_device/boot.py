@@ -44,10 +44,10 @@ class App:
                 if utime.time() % interval_measure == 0:
                     self.sensor.measure()
                     self.mqtt.publish(
-                        feed=self.f_humidity,
+                        topic=self.f_humidity,
                         msg=str(self.sensor.get_humidity()).encode())
                     self.mqtt.publish(
-                        feed=self.f_temperature,
+                        topic=self.f_temperature,
                         msg=str(self.sensor.get_temperature()).encode())
 
                 utime.sleep(interval)
