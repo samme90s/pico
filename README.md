@@ -40,6 +40,8 @@ PORT = 1883
 
 Author: [Samuel Svensson](https://github.com/samme90s)
 
+Presentation: [www.youtube.com/watch?v=M8NJ7QRGhQY](https://www.youtube.com/watch?v=M8NJ7QRGhQY)
+
 ### Objective
 
 The objective of this project is to build a sensor for fridges that alerts the user if the temperature is outside its correct range of 2-8°C. Two MCUs will be connected to the internet and one will transmit data to a cloud service whilst the other subscribes to this data and analyzes it. Additionally, the project will give insights into the possibilities of internet of things and how to apply code to real world applications. Based on the data collected, the user can see trends over time, make decisions based on the data and present the data in a meaningful way, and apply a solution to prevent a possible problem.
@@ -197,9 +199,7 @@ class DHT(Controller):
     ...
 ```
 
-### Presentation and Reflections
-
-[Video Presentation](#)
+### Reflections
 
 I originally wanted to create a weather station and possibly using machine learning to predict the weather. However, I found that it may be too expensive with the components. I then tried looking at something more simple and allowed me to use existing components that I already had. I instead decided to go for an application that allowed me to monitor temperature and alert the user if it goes outside its range. Therefore creating it specifically for a fridge seemed like a good idea and could be useful in a real world scenario.
 
