@@ -38,9 +38,11 @@ PORT = 1883
 
 **Temperature Alarm System**
 
-Author: [Samuel Svensson](https://github.com/samme90s)
+Author: [Samuel Svensson](https://github.com/samme90s) (ss225ze)
 
-Presentation: [www.youtube.com/watch?v=M8NJ7QRGhQY](https://www.youtube.com/watch?v=M8NJ7QRGhQY)
+Outcome: [www.youtube.com/watch?v=M8NJ7QRGhQY](https://www.youtube.com/watch?v=M8NJ7QRGhQY)
+
+Estimate: 2hrs
 
 ### Objective
 
@@ -94,6 +96,8 @@ Adafruit IO is a cloud service that allows you to send and receive data from you
 2. Enter your credentials in the `config.py` file (see [Development](#development) above).
 
 Feeds are the data points and stores the data sent from the device and represent the MQTT topics. Furthermore, creating a dashboard allows the user to control a feed or display its data.
+
+![Adafruit dashboard sensor readings](.readme/readings.png "Adafruit dashboard sensor readings")
 
 ### Data flow / Connectivity
 
