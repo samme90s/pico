@@ -83,8 +83,8 @@ All the material can be picked up at Elektro:Kit (Sweden). Here are the minimum 
 
 ### Construction
 
-**IMPORTANT** -- Make sure to not confuse `Pin` numbers with `GPIO` numbers and the Pico has both.
-The `GPIO` numbers are the ones used in the code and will therefore be used in this tutorial. See respective diagrams: [PicoW](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files-2) and [DHT11](https://www.electrokit.com/upload/product/41015/41015728/41015728_-_Digital_Temperature_Humidity_Sensor.pdf).
+**IMPORTANT** -- Make sure to not confuse `Pin` with `GPIO` (general-purpose input/output).
+The `GPIO` identifiers are the ones used in the code. See respective pinout diagrams: [PicoW](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files-2) and [DHT11](https://www.electrokit.com/upload/product/41015/41015728/41015728_-_Digital_Temperature_Humidity_Sensor.pdf).
 
 ![Both wired components](.readme/wiring.png "Both wired components")
 
