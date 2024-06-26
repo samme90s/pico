@@ -92,11 +92,11 @@ The `GPIO` identifiers are the ones used in the code.
 
 `GND` is used across all schematics and acts as ground.
 
-| Pin        | Comment                                             |
-| ---------- | --------------------------------------------------- |
-| `3V3(OUT)` | Used to power the DHT11.                            |
-| `GP28`     | Used for data transmission in the Sensor schematic. |
-| `GP15`     | Used to control the LED's state.                    |
+| Pin        | Comment                                               |
+| ---------- | ----------------------------------------------------- |
+| `3V3(OUT)` | Used to power the DHT11.                              |
+| `GP28`     | Used for data transmission and controlling the DHT11. |
+| `GP15`     | Used to control the LED's state.                      |
 
 Please navigate to the [Raspberry Pi Pico W pinout diagram](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files-2) for further insight.
 
