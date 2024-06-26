@@ -58,8 +58,8 @@ All the material can be picked up at Elektro:Kit (Sweden). Here are the minimum 
 | -------------------------- | ------------------------------------------------------------------------------ | ------ | ------------------------------------------------- | ------------------------------ |
 | MCU (Raspberry Pi Pico WH) | [41019114](https://www.electrokit.com/raspberry-pi-pico-wh)                    | ~90SEK | Run services and control components using code.   | With headers already soldered. |
 | Sensor (DHT11)             | [41015728](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | ~50SEK | Collecting the temperature and humidity readings. |                                |
-| LED (Red colored)          | [40307020](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd)              | ~5SEK  | Sensory cue to the user.                          |                                |
-| Resistor (330ohm)          | [40810233](https://www.electrokit.com/motstand-kolfilm-0.25w-330ohm-330r)      | ~1SEK  | Using the LED.                                    |                                |
+| LED (Red colored)          | [40307020](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd)              | ~5SEK  |                                                   | Sensory cue to the user.       |
+| Resistor (330ohm)          | [40810233](https://www.electrokit.com/motstand-kolfilm-0.25w-330ohm-330r)      | ~1SEK  |                                                   | To not fry the LED.            |
 | Breadboard                 | [41012199](https://www.electrokit.com/kopplingsdack-400-anslutningar)          | ~50SEK |                                                   |                                |
 | \*Wires (Female-to-Female) | [41015695](https://www.electrokit.com/labsladd-1-pin-hona-hona-150mm-10-pack)  | ~30SEK |                                                   |                                |
 | \*Wires (Male-to-Male)     | [41015693](https://www.electrokit.com/labsladd-1-pin-hane-hane-150mm-10-pack)  | ~30SEK |                                                   |                                |
