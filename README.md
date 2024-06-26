@@ -48,19 +48,21 @@ Estimate: 2hrs
 
 The objective of this project is to build a sensor for fridges that alerts the user if the temperature is outside its correct range of 2-8°C. Two MCUs will be connected to the internet and one will transmit data to a cloud service whilst the other subscribes to this data and analyzes it. Additionally, the project will give insights into the possibilities of internet of things and how to apply code to real world applications. Based on the data collected, the user can see trends over time, make decisions based on the data and present the data in a meaningful way, and apply a solution to prevent a possible problem.
 
+To get a view of the final product, please navigate to the YouTube video found under [Guide and Walkthrough](#guide-and-walkthrough)
+
 ### Material
 
 All the material can be picked up at Elektro:Kit (Sweden). Here are the minimum articles required (picking up a breadboard is recommended). Depending on the version of DHT11, a resistor might be needed (the one listed below does not when using the 3v3 onboard pin). A second Pico is optional as you could technically use the same Pico to attach the LED to. However, this does not allow for the same functionality and flexibility, i.e. it would have to be in the same location as the sensor.
 
-| Type                       | Article                                                                        | Price  |
-| -------------------------- | ------------------------------------------------------------------------------ | ------ |
-| MCU (PicoWH)               | [41019114](https://www.electrokit.com/raspberry-pi-pico-wh)                    | ~90SEK |
-| Temperature sensor (DHT11) | [41015728](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | ~50SEK |
-| LED (Red)                  | [40307020](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd)              | ~5SEK  |
-| Resistor (330ohm)          | [40810233](https://www.electrokit.com/motstand-kolfilm-0.25w-330ohm-330r)      | ~1SEK  |
-| Breadboard                 | [41012199](https://www.electrokit.com/kopplingsdack-400-anslutningar)          | ~50SEK |
-| \*Wires (Female-to-Female) | [41015695](https://www.electrokit.com/labsladd-1-pin-hona-hona-150mm-10-pack)  | ~30SEK |
-| \*Wires (Male-to-Male)     | [41015693](https://www.electrokit.com/labsladd-1-pin-hane-hane-150mm-10-pack)  | ~30SEK |
+| Type                       | Article                                                                        | Price  | Description                                       | Comment                        |
+| -------------------------- | ------------------------------------------------------------------------------ | ------ | ------------------------------------------------- | ------------------------------ |
+| MCU (Raspberry Pi Pico WH) | [41019114](https://www.electrokit.com/raspberry-pi-pico-wh)                    | ~90SEK | Run services and control components using code.   | With headers already soldered. |
+| Sensor (DHT11)             | [41015728](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | ~50SEK | Collecting the temperature and humidity readings. |                                |
+| LED (Red colored)          | [40307020](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd)              | ~5SEK  | Sensory cue to the user.                          |                                |
+| Resistor (330ohm)          | [40810233](https://www.electrokit.com/motstand-kolfilm-0.25w-330ohm-330r)      | ~1SEK  | Using the LED.                                    |                                |
+| Breadboard                 | [41012199](https://www.electrokit.com/kopplingsdack-400-anslutningar)          | ~50SEK |                                                   |                                |
+| \*Wires (Female-to-Female) | [41015695](https://www.electrokit.com/labsladd-1-pin-hona-hona-150mm-10-pack)  | ~30SEK |                                                   |                                |
+| \*Wires (Male-to-Male)     | [41015693](https://www.electrokit.com/labsladd-1-pin-hane-hane-150mm-10-pack)  | ~30SEK |                                                   |                                |
 
 **\*** Recommended to get both, but you decide which you need.
 
@@ -84,7 +86,19 @@ All the material can be picked up at Elektro:Kit (Sweden). Here are the minimum 
 ### Construction
 
 **IMPORTANT** -- Make sure to not confuse `Pin` with `GPIO` (general-purpose input/output).
-The `GPIO` identifiers are the ones used in the code. See respective pinout diagrams: [PicoW](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files-2) and [DHT11](https://www.electrokit.com/upload/product/41015/41015728/41015728_-_Digital_Temperature_Humidity_Sensor.pdf).
+The `GPIO` identifiers are the ones used in the code.
+
+#### Pin usage
+
+`GND` is used across all schematics and acts as ground.
+
+| Pin        | Comment                                             |
+| ---------- | --------------------------------------------------- |
+| `3V3(OUT)` | Used to power the DHT11.                            |
+| `GP28`     | Used for data transmission in the Sensor schematic. |
+| `GP15`     | Used to control the LED's state.                    |
+
+Please navigate to the [Raspberry Pi Pico W pinout diagram](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files-2) for further insight.
 
 ![Both wired components](.readme/wiring.png "Both wired components")
 
