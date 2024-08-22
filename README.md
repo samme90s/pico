@@ -38,7 +38,7 @@ PORT = 1883
 
 **Temperature Alarm System**
 
-Author: [Samuel Svensson](https://github.com/samme90s) (ss225ze)
+Author: [Samuel Svensson](https://github.com/samme90s)
 
 Outcome: [www.youtube.com/watch?v=M8NJ7QRGhQY](https://www.youtube.com/watch?v=M8NJ7QRGhQY)
 
