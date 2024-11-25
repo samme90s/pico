@@ -40,9 +40,7 @@ PORT = 1883
 
 Author: [Samuel Svensson](https://github.com/samme90s)
 
-Outcome: [www.youtube.com/watch?v=M8NJ7QRGhQY](https://www.youtube.com/watch?v=M8NJ7QRGhQY)
-
-Estimate: 2hrs
+Estimate: 2hrs (if you have some previous knowledge and the code base)
 
 ### Objective
 
